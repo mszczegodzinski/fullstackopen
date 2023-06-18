@@ -3,7 +3,7 @@ const app = express();
 
 app.use(express.json());
 
-const persons = [
+let persons = [
   {
     id: 1,
     name: 'Arto Hellas',
@@ -54,13 +54,23 @@ app.get('/api/persons/:id', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id);
-  const result = persons.find((person) => person.id === id);
-
-  if (result) {
-    persons.splice(persons.indexOf(result), 1);
-  }
+  const result = persons.find((person) => person.id !== id);
+  persons = result;
 
   return res.status(204).end();
+});
+
+app.post('/api/persons', (req, res) => {
+  const { name, number } = req.body;
+  const id = Math.floor(Math.random() * 1000);
+  const person = {
+    id,
+    name,
+    number,
+  };
+  persons = persons.concat(person);
+
+  return res.send(person);
 });
 
 const PORT = process.env.PORT || 3001;
