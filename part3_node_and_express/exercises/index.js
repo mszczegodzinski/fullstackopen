@@ -26,10 +26,6 @@ const persons = [
   },
 ];
 
-app.get('/api/persons', (req, res) => {
-  res.send(persons);
-});
-
 app.get('/info', (req, res) => {
   const currentDate = new Date().toString();
   const peopleCount = `Phonebook has info for ${persons.length} people`;
@@ -38,6 +34,21 @@ app.get('/info', (req, res) => {
     <p>${currentDate}</p>
   `;
   res.send(resultString);
+});
+
+app.get('/api/persons', (req, res) => {
+  res.send(persons);
+});
+
+app.get('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const result = persons.find((person) => person.id === id);
+
+  if (!result) {
+    return res.status(204).send('Person not found');
+  } else {
+    return res.send(result);
+  }
 });
 
 const PORT = process.env.PORT || 3001;
