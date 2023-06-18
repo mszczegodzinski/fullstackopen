@@ -43,12 +43,24 @@ app.get('/api/persons', (req, res) => {
 app.get('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id);
   const result = persons.find((person) => person.id === id);
+  console.log(result);
 
   if (!result) {
-    return res.status(204).send('Person not found');
-  } else {
-    return res.send(result);
+    return res.status(404).send('Person not found');
   }
+
+  return res.send(result);
+});
+
+app.delete('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const result = persons.find((person) => person.id === id);
+
+  if (result) {
+    persons.splice(persons.indexOf(result), 1);
+  }
+
+  return res.status(204).end();
 });
 
 const PORT = process.env.PORT || 3001;
