@@ -30,6 +30,16 @@ app.get('/api/persons', (req, res) => {
   res.send(persons);
 });
 
+app.get('/info', (req, res) => {
+  const currentDate = new Date().toString();
+  const peopleCount = `Phonebook has info for ${persons.length} people`;
+  const resultString = `
+    <p>${peopleCount}</p>
+    <p>${currentDate}</p>
+  `;
+  res.send(resultString);
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT);
 
