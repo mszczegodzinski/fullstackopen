@@ -3,7 +3,7 @@ import { Header } from './components/Header';
 import { Filter } from './components/Filter';
 import { PersonForm } from './components/PersonForm';
 import { Persons } from './components/Persons';
-import { createPerson, getAllPersons, deletePersonById } from './services/persons';
+import { createPerson, getAllPersons, deletePersonById, updatePersonNumber } from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -16,16 +16,36 @@ const App = () => {
   const addPerson = (e) => {
     e.preventDefault();
     const person = persons.find((person) => person.name === newName);
-
     if (person) {
-      return alert(`${person.name} is already in the phonebook`);
+      const confirmed = window.confirm('A person with this name already exists. Do you want to replace it?');
+      if (!confirmed) {
+        return;
+      }
+      return updatePersonNumber(person, newNumber)
+        .then((updatedPerson) => {
+          const updatedPersons = persons.map((person) => {
+            return person.id === updatedPerson.id ? updatedPerson : person;
+          });
+          setPersons([...updatedPersons]);
+          setNewName('');
+          setNewNumber('');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
+
     const newPerson = { name: newName, number: newNumber };
 
-    createPerson(newPerson).then((newNote) => {
-      setPersons([...persons, newNote]);
-      setNewName('');
-    });
+    createPerson(newPerson)
+      .then((newNote) => {
+        setPersons([...persons, newNote]);
+        setNewName('');
+        setNewNumber('');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const onSearchInputChange = (e) => {
