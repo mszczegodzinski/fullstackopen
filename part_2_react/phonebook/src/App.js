@@ -1,4 +1,8 @@
 import { useState } from 'react';
+import { Header } from './components/Header';
+import { Filter } from './components/Filter';
+import { PersonForm } from './components/PersonForm';
+import { Persons } from './components/Persons';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -9,6 +13,7 @@ const App = () => {
   ]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+
   const [searchedPersons, setSearchedPersons] = useState('');
   const [filteredPersons, setFilteredPersons] = useState([]);
 
@@ -22,16 +27,6 @@ const App = () => {
     setPersons([...persons, { name: newName, number: newNumber }]);
   };
 
-  const onNameInputChange = (e) => {
-    const currentName = e.target.value;
-    setNewName(currentName);
-  };
-
-  const onNumberInputChange = (e) => {
-    const currentNumber = e.target.value;
-    setNewNumber(currentNumber);
-  };
-
   const onSearchInputChange = (e) => {
     const currentSearch = e.target.value;
     setSearchedPersons(currentSearch);
@@ -42,32 +37,16 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          filter shown with <input value={searchedPersons} onChange={onSearchInputChange} />
-        </div>
-        <div>
-          <h2>Add a new</h2>
-          <div>
-            name: <input value={newName} onChange={onNameInputChange} />
-          </div>
-          <div>
-            number: <input value={newNumber} onChange={onNumberInputChange} />
-          </div>
-        </div>
-        <div>
-          <button type='submit'>add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <div>
-        {searchedPersons.length
-          ? filteredPersons.map((person, i) => (
-              <div key={`${i}-person.name}`}>{`${person.name}: ${person.number}`}</div>
-            ))
-          : persons.map((person, i) => <div key={`${i}-person.name}`}>{`${person.name}: ${person.number}`}</div>)}
-      </div>
+      <Header />
+      <Filter onSearchInputChange={onSearchInputChange} />
+      <PersonForm
+        newName={newName}
+        newNumber={newNumber}
+        setNewName={setNewName}
+        setNewNumber={setNewNumber}
+        addPerson={addPerson}
+      />
+      <Persons filteredPersons={filteredPersons} persons={persons} searchedPersons={searchedPersons} />
     </div>
   );
 };
