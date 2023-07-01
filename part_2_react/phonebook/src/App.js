@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Header } from './components/Header';
 import { Filter } from './components/Filter';
 import { PersonForm } from './components/PersonForm';
 import { Persons } from './components/Persons';
+import { createPerson, getAllPersons, deletePersonById } from './services/persons';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -22,8 +22,8 @@ const App = () => {
     }
     const newPerson = { name: newName, number: newNumber };
 
-    axios.post('http://localhost:3001/persons', newPerson).then((res) => {
-      setPersons([...persons, res.data]);
+    createPerson(newPerson).then((newNote) => {
+      setPersons([...persons, newNote]);
       setNewName('');
     });
   };
@@ -37,13 +37,17 @@ const App = () => {
   };
 
   useEffect(() => {
-    // prettier-ignore
-    axios
-      .get('http://localhost:3001/persons')
-      .then((res) => {
-        setPersons(res.data);
-      });
+    getAllPersons().then((initialData) => setPersons(initialData));
   }, []);
+
+  const deletePerson = (id) => {
+    deletePersonById(id)
+      .then(() => setPersons(persons.filter((person) => person.id !== id)))
+      .catch((error) => {
+        console.log(error);
+        alert('Failed to delete person.');
+      });
+  };
 
   return (
     <div>
@@ -56,7 +60,12 @@ const App = () => {
         setNewNumber={setNewNumber}
         addPerson={addPerson}
       />
-      <Persons filteredPersons={filteredPersons} persons={persons} searchedPersons={searchedPersons} />
+      <Persons
+        filteredPersons={filteredPersons}
+        persons={persons}
+        searchedPersons={searchedPersons}
+        deletePerson={deletePerson}
+      />
     </div>
   );
 };
