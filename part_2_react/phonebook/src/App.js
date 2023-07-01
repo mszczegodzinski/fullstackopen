@@ -20,8 +20,12 @@ const App = () => {
     if (person) {
       return alert(`${person.name} is already in the phonebook`);
     }
-    setPersons([...persons, { name: newName, number: newNumber }]);
-    setNewName('');
+    const newPerson = { name: newName, number: newNumber };
+
+    axios.post('http://localhost:3001/persons', newPerson).then((res) => {
+      setPersons([...persons, res.data]);
+      setNewName('');
+    });
   };
 
   const onSearchInputChange = (e) => {
