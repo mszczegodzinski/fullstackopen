@@ -8,9 +8,9 @@ const Person = ({ name, number, onDelete }) => {
 
 export const Persons = ({ searchedPersons, filteredPersons, persons, deletePerson }) => {
   return (
-    <>
+    <ul>
       <h3>Numbers</h3>
-      <div>
+      <li>
         {searchedPersons.length
           ? filteredPersons.map((person, i) => (
               <Person
@@ -28,7 +28,7 @@ export const Persons = ({ searchedPersons, filteredPersons, persons, deletePerso
                 onDelete={() => deletePerson(person.id)}
               />
             ))}
-      </div>
-    </>
+      </li>
+    </ul>
   );
 };

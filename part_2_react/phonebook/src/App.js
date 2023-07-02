@@ -4,14 +4,16 @@ import { Filter } from './components/Filter';
 import { PersonForm } from './components/PersonForm';
 import { Persons } from './components/Persons';
 import { createPerson, getAllPersons, deletePersonById, updatePersonNumber } from './services/persons';
+import { Notification } from './components/Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
-
   const [searchedPersons, setSearchedPersons] = useState('');
   const [filteredPersons, setFilteredPersons] = useState([]);
+  const [message, setMessage] = useState('');
+  const [isError, setIsError] = useState(false);
 
   const addPerson = (e) => {
     e.preventDefault();
@@ -27,24 +29,37 @@ const App = () => {
             return person.id === updatedPerson.id ? updatedPerson : person;
           });
           setPersons([...updatedPersons]);
+          setMessage('Person was updated.');
           setNewName('');
           setNewNumber('');
+          setTimeout(() => setMessage(''), 5000);
         })
         .catch((error) => {
-          console.log(error);
+          setMessage(`Person ${person.name} was updated.`);
+          setIsError(true);
+          setTimeout(() => {
+            setMessage('');
+            setIsError(false);
+          }, 5000);
         });
     }
 
     const newPerson = { name: newName, number: newNumber };
 
     createPerson(newPerson)
-      .then((newNote) => {
-        setPersons([...persons, newNote]);
+      .then((newPerson) => {
+        setPersons([...persons, newPerson]);
+        setMessage(`Person ${newPerson.name} was created.`);
         setNewName('');
         setNewNumber('');
+        setTimeout(() => setMessage(''), 5000);
       })
       .catch((error) => {
-        console.log(error);
+        setMessage('Person was not created.');
+        setTimeout(() => {
+          setMessage('');
+          setIsError(false);
+        }, 5000);
       });
   };
 
@@ -62,16 +77,24 @@ const App = () => {
 
   const deletePerson = (id) => {
     deletePersonById(id)
-      .then(() => setPersons(persons.filter((person) => person.id !== id)))
+      .then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
+        setMessage('Person was deleted.');
+        setTimeout(() => setMessage(''), 5000);
+      })
       .catch((error) => {
-        console.log(error);
-        alert('Failed to delete person.');
+        setMessage(`Information of this person has already been deleted from the server.`);
+        setTimeout(() => {
+          setMessage('');
+          setIsError(false);
+        }, 5000);
       });
   };
 
   return (
     <div>
       <Header />
+      <Notification message={message} isError={isError} />
       <Filter onSearchInputChange={onSearchInputChange} />
       <PersonForm
         newName={newName}
