@@ -48,15 +48,12 @@ app.get('/api/persons', (req, res) => {
 });
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const result = persons.find((person) => person.id === id);
-  console.log(result);
-
-  if (!result) {
-    return res.status(404).send('Person not found');
-  }
-
-  return res.send(result);
+  Person.findById(req.params.id).then((person) => {
+    if (!person) {
+      return res.status(404).json({ error: 'Person not found' });
+    }
+    res.json(person);
+  });
 });
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -69,24 +66,25 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const { name, number } = req.body;
+
   if (!name || !number) {
-    return res.status(400).send('Name and number are required');
-  }
-  const id = Math.floor(Math.random() * 1000);
-  const isUniqueName = persons.find((person) => person.name === name) ? false : true;
-
-  if (!isUniqueName) {
-    return res.status(400).send({ error: 'Name must be unique' });
+    return res.status(400).json({ error: 'Name and number are required' });
   }
 
-  const person = {
-    id,
+  Person.findOne({ name: name }).then((persons) => {
+    if (persons) {
+      return res.status(400).json({ error: 'Name must be unique' });
+    }
+  });
+
+  const person = new Person({
     name,
     number,
-  };
-  persons = persons.concat(person);
+  });
 
-  return res.send(person);
+  person.save().then((newPerson) => {
+    res.json(newPerson);
+  });
 });
 
 const PORT = process.env.PORT;

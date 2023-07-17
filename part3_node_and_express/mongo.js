@@ -14,8 +14,8 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema);
 
 const person = new Person({
-  name: process.argv[4],
-  number: process.argv[5],
+  name: process.argv[2],
+  number: process.argv[3],
 });
 
 // uncomment if you want to save a new person to mongodb cloud:
