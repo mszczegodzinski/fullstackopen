@@ -35,8 +35,8 @@ const App = () => {
           setTimeout(() => setMessage(''), 5000);
         })
         .catch((error) => {
-          setMessage(`Person ${person.name} was updated.`);
           setIsError(true);
+          setMessage(`Person ${person.name} was not updated.`);
           setTimeout(() => {
             setMessage('');
             setIsError(false);
@@ -55,11 +55,15 @@ const App = () => {
         setTimeout(() => setMessage(''), 5000);
       })
       .catch((error) => {
-        setMessage('Person was not created.');
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(error.response.data, 'text/html');
+        const errorMessage = htmlDoc?.querySelector('pre')?.textContent;
+        setIsError(true);
+        setMessage(errorMessage);
         setTimeout(() => {
           setMessage('');
           setIsError(false);
-        }, 5000);
+        }, 8000);
       });
   };
 

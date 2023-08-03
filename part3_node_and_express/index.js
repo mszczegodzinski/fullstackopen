@@ -9,9 +9,12 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.code === 'CastError') {
     return res.status(404).send({ error: 'Person not found. Malformed id' });
+  } else if (error.code === 'ValidationError') {
+    console.log(error);
+    return res.status(404).send({ error: error.message });
   }
 
-  next(error);
+  next(error.message);
 };
 
 const unknownEndpoint = (req, res, next) => {
@@ -61,7 +64,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch((error) => next(error));
 });
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const { name, number } = req.body;
 
   if (!name || !number) {
@@ -79,19 +82,17 @@ app.post('/api/persons', (req, res) => {
     number,
   });
 
-  person.save().then((newPerson) => {
-    res.json(newPerson);
-  });
+  person
+    .save()
+    .then((newPerson) => {
+      res.json(newPerson);
+    })
+    .catch((error) => next(error));
 });
 
 app.put('/api/persons/:id', (req, res, next) => {
   const { name, number } = req.body;
-  const person = {
-    name,
-    number,
-  };
-
-  Person.findOneAndUpdate(req.params.id, person, { new: true })
+  Person.findByIdAndUpdate(req.params.id, { name, number }, { new: true, runValidators: true, context: 'query' })
     .then((updatedPerson) => {
       res.json(updatedPerson);
     })
