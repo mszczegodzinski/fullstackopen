@@ -17,7 +17,7 @@ const errorHandler = (error, req, res, next) => {
   next(error.message);
 };
 
-const unknownEndpoint = (req, res, next) => {
+const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'Unknown endpoint' });
 };
 
@@ -58,7 +58,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then((person) => {
+    .then(() => {
       res.status(204).end();
     })
     .catch((error) => next(error));

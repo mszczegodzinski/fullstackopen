@@ -8,7 +8,8 @@
     "dev": "nodemon index.js",
     "start": "node index.js",
     "build:ui": "rm -rf build && cd ../part_2_react/phonebook && npm run build && cp -r build ../../part3_node_and_express",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +20,8 @@
     "mongoose": "^7.3.1"
   },
   "devDependencies": {
+    "eslint": "^8.46.0",
+    "eslint-plugin-react": "^7.33.1",
     "nodemon": "^2.0.22"
   }
 }

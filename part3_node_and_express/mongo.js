@@ -19,11 +19,11 @@ const person = new Person({
 });
 
 // uncomment if you want to save a new person to mongodb cloud:
-// person.save().then((result) => {
-//   console.log('res', result);
-//   console.log('person saved!');
-//   mongoose.connection.close();
-// });
+person.save().then((result) => {
+  console.log('res', result);
+  console.log('person saved!');
+  mongoose.connection.close();
+});
 
 Person.find({}).then((result) => {
   result.forEach((element) => {
