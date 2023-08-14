@@ -1,22 +1,10 @@
 const mongoose = require('mongoose');
 
-const mongoUrl = process.env.MONGODB_URI;
-
-mongoose.set('strictQuery', false);
-mongoose
-  .connect(mongoUrl)
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
 const blogSchema = new mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number,
+  title: { type: String, minlength: 3, required: true },
+  author: { type: String, minlength: 3, required: true },
+  url: { type: String, minlength: 6, required: true },
+  likes: { type: Number, required: true },
 });
 
 blogSchema.set('toJSON', {
