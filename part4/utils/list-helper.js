@@ -78,10 +78,35 @@ const favoriteBlog = (blogs) => {
   return mostedLiked;
 };
 
+const mostBlogs = (blogs) => {
+  const authorsBlogsCounter = blogs.reduce((acc, blog) => {
+    if (acc[blog.author]) {
+      acc[blog.author]++;
+    } else {
+      acc[blog.author] = 1;
+    }
+    return acc;
+  }, {});
+
+  const authorWithTheMostBlogs = Object.entries(authorsBlogsCounter).reduce(
+    (acc, author) => {
+      if (acc.blogs < author[1]) {
+        acc.author = author[0];
+        acc.blogs = author[1];
+      }
+      return acc;
+    },
+    { author: '', blogs: 0 }
+  );
+
+  return authorWithTheMostBlogs;
+};
+
 module.exports = {
   blogs,
   listWithOneBlog,
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 };
