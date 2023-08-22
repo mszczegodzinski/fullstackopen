@@ -33,12 +33,22 @@ describe('The most liked blog', () => {
   });
 });
 
-describe('The author with the most blogs', () => {
-  test.only('finds the author with the most blogs', () => {
+describe('The most blogs', () => {
+  test('finds the author with the most blogs', () => {
     const result = listHelper.mostBlogs(listHelper.blogs);
     expect(result).toEqual({
       author: 'Robert C. Martin',
       blogs: 3,
+    });
+  });
+});
+
+describe('the most total likes', () => {
+  test.only('finds the author with the most total likes', () => {
+    const result = listHelper.mostLikes(listHelper.blogs);
+    expect(result).toEqual({
+      author: 'Edsger W. Dijkstra',
+      likes: 17,
     });
   });
 });
