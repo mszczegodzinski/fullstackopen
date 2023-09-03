@@ -72,6 +72,38 @@ describe('BlogList API', () => {
     expect(res.body.likes).toBe(0);
   });
 
+  test('try add Blog with missing title', async () => {
+    const invalidBlog = {
+      author: 'Test Author',
+      url: 'https://somevalidblog.com/',
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(invalidBlog)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const blogList = await helper.blogsInDb();
+    expect(blogList).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test('try add Blog with missing url', async () => {
+    const invalidBlog = {
+      title: 'A new blog with no likes',
+      author: 'Test Author',
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(invalidBlog)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const blogList = await helper.blogsInDb();
+    expect(blogList).toHaveLength(helper.initialBlogs.length);
+  });
+
   afterAll(async () => {
     await mongoose.connection.close();
   });

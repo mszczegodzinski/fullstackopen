@@ -8,10 +8,14 @@ blogsRouter.get('/', async (req, res) => {
 });
 
 blogsRouter.post('/', async (req, res) => {
-  const { title, author, url, likes } = req.body;
-  const blog = new Blog({ title, author, url, likes });
+  const { author, title, url, likes } = req.body;
+  if (!title || !url) {
+    return res.status(400).json({ message: 'Please provide title and url' });
+  }
 
+  const blog = new Blog({ title, author, url, likes });
   const newBlog = await blog.save();
+
   res.status(201).json(newBlog);
 });
 
