@@ -7,18 +7,12 @@ blogsRouter.get('/', async (req, res) => {
   res.json(blogs);
 });
 
-blogsRouter.post('/', (req, res) => {
+blogsRouter.post('/', async (req, res) => {
   const { title, author, url, likes } = req.body;
   const blog = new Blog({ title, author, url, likes });
 
-  blog
-    .save()
-    .then((newBlog) => {
-      res.status(201).json(newBlog);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  const newBlog = await blog.save();
+  res.status(201).json(newBlog);
 });
 
 module.exports = blogsRouter;

@@ -35,6 +35,27 @@ describe('BlogList API', () => {
     expect(blog._id).toBeUndefined();
   });
 
+  test('valid Blog can be added to DB', async () => {
+    const validBlog = {
+      title: 'A new valid blog',
+      author: 'Test Author',
+      url: 'https://somevalidblog.com/',
+      likes: 7,
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(validBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const updatedBlogList = await helper.blogsInDb();
+    expect(updatedBlogList).toHaveLength(helper.initialBlogs.length + 1);
+
+    const blogsContents = updatedBlogList.map((blog) => blog.title);
+    expect(blogsContents).toContain(validBlog.title);
+  });
+
   afterAll(async () => {
     await mongoose.connection.close();
   });
