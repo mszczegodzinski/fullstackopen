@@ -1,3 +1,4 @@
+const { expect } = require('@jest/globals');
 const listHelper = require('../utils/list-helper');
 
 test('dummy returns one', () => {
@@ -14,14 +15,14 @@ describe('total likes', () => {
   });
 
   test('when list has 6 blogs ', () => {
-    const result = listHelper.totalLikes(listHelper.blogs);
+    const result = listHelper.totalLikes(listHelper.initialBlogs);
     expect(result).toBe(36);
   });
 });
 
 describe('The most liked blog', () => {
   test('find the blog with the most likes', () => {
-    const result = listHelper.favoriteBlog(listHelper.blogs);
+    const result = listHelper.favoriteBlog(listHelper.initialBlogs);
     expect(result).toEqual({
       _id: '5a422b3a1b54a676234d17f9',
       title: 'Canonical string reduction',
@@ -35,7 +36,7 @@ describe('The most liked blog', () => {
 
 describe('The most blogs', () => {
   test('finds the author with the most blogs', () => {
-    const result = listHelper.mostBlogs(listHelper.blogs);
+    const result = listHelper.mostBlogs(listHelper.initialBlogs);
     expect(result).toEqual({
       author: 'Robert C. Martin',
       blogs: 3,
@@ -44,8 +45,8 @@ describe('The most blogs', () => {
 });
 
 describe('the most total likes', () => {
-  test.only('finds the author with the most total likes', () => {
-    const result = listHelper.mostLikes(listHelper.blogs);
+  test('finds the author with the most total likes', () => {
+    const result = listHelper.mostLikes(listHelper.initialBlogs);
     expect(result).toEqual({
       author: 'Edsger W. Dijkstra',
       likes: 17,
