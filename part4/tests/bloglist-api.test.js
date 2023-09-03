@@ -27,7 +27,7 @@ describe('BlogList API', () => {
     expect(response.body).toHaveLength(helper.initialBlogs.length);
   });
 
-  test('unique identifier is named "id" insted of "_id', async () => {
+  test('unique identifier is named "id" insted of "_id"', async () => {
     const response = await api.get('/api/blogs');
     const blog = response.body[0];
 
@@ -54,6 +54,22 @@ describe('BlogList API', () => {
 
     const blogsContents = updatedBlogList.map((blog) => blog.title);
     expect(blogsContents).toContain(validBlog.title);
+  });
+
+  test('a new Blog with default likes value can be added', async () => {
+    const blogWithoutLikes = {
+      title: 'A new blog with no likes',
+      author: 'Test Author',
+      url: 'https://somevalidblog.com/',
+    };
+
+    const res = await api
+      .post('/api/blogs')
+      .send(blogWithoutLikes)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    expect(res.body.likes).toBe(0);
   });
 
   afterAll(async () => {
